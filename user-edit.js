@@ -1,5 +1,5 @@
 import {VolumeControl} from './volume-control.js'
-import {span,div, button} from './helpers.js'
+import {span ,div, button} from './vanilla-fp.js'
 
 export const UserEdit = ({userInfo, setUserInfo}) => 
   div({},[

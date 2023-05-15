@@ -1,35 +1,65 @@
-This repo serves as a demo of a minimal way of building component-based purely-functional UIs, without using any external frameworks.
+The no-framework framework - for building component-based purely-functional UIs.
 
-vanilla-fp
----
+About vanilla-fp 
+===
 
-A vanilla-fp component is a pure-ish function. 
+At the heart of vanilla-fp is not code but convention for how to build a component. A component is a pure-ish function. It typically receives these two parameters (typically called 'state' and 'setState', but can vary across components) which provide the component with a state and with a function for altering its state.
 
-It typically receives these two parameters:
-- The state of the component.
-- A function for altering that state.
+The component function returns a *UI component*, using the building blocks provided by the framework:
 
-It returns a *UI component* (in the current implementation it uses just a plain DOM node, but it can be easily be extended to use some virtual DOM framework.
+```
+import {div, button, span} from './vanilla-fp.js'
+export const VolumeControl = ({volume = 0, setVolume}) => 
+  div({className:"container"}, [
+    button({text: "+", onClick: () => setVolume(volume +1)}),
+    span({className: "currentVolume", text: volume}),
+    button({text: "-", onClick: () => setVolume(volume -1)}),
+  ])  
+```
 
-The difference from the typical approach is that the parent component is in charge of keeping the states of its children, instead of utilizing some external global functions and frameworks. 
+Each vanilla-fp , a component is in charge of keeping the states of its children, instead of utilizing some external global functions and frameworks. It does so by providing implementations of the 'setState' function that saves the child state in the component's own state.
+
+```
+import {VolumeControl} from './volume-control.js'
+import {span ,div, button} from './vanilla-fp.js'
+
+export const UserEdit = ({userInfo, setUserInfo}) => 
+  div({},[
+    span({text:userInfo.name}),
+    VolumeControl({
+       volume: userInfo.credits, 
+       setVolume: (volume) => setUserInfo({...userInfo, credits: volume})
+    })
+  ])
+```
 
 Why?
 ---
 
-Using component-based design allows you to organize your stuff better by promoting hierarchy in your code (in most cases you have to have a global variable in your program, but in this way you at least have *just one* global variable). However, it is rarely utilized to the fullest, because of the lack of a standard way of *managing state* when developing components.
+Using component-based design allows you to organize your stuff better by promoting hierarchy in your code . However, it is rarely utilized to the fullest, because of the lack of a standard way of *managing state* when developing components (in most cases you have to have a global variable in your program, but we have to at least make sure it is *just one* global variable.
 
-Usually we either use some mechanism provided by the framework that we use, like "useState" for React, but this complicates things a lot.
-
-Another option is to use an external state management module, like Redux. Redux was/is actually great, the only issue with it (besides being a bit rudimentary) is that *it only handles state*, so a component would have to come in two parts - state handler and template - that you have to assemble every time. In other words, - Redux is not *composable* e.g. there is no standard way of embedding one Redux app into another.
-
-Such a way should support creating a component that has its own template, and its own set of messages that it sends and receive and should provide an easy way to write handlers for these messages. 
-
-Here I show that this can be achieved just by passing some simple even-handling functions from parent component to the children.
-
-
-In this repo
+Why not Redux/MobX
 ---
 
-- A proof-of-concept functional component-based framework, (vanilla-fp.js) 
+Redux is great, but *it only handles state*, so a component would have to come in two parts - state handler and template - that you have to assemble every time. Because of this, Redux is not *composable* e.g. there is no standard way of embedding one Redux app into another. There is no such thing as a Redux component.
+
+Why not React `useState`
+---
+
+`useState` is *not* great IMO, for many reasons:
+
+- You neither have control, nor visibility of the states of your child components. which provokes endless SO debates on "How to listen to child component events", "How to change the state of the child component" etc. Encapsulation of state is important but when you have a hierarchy, the parent has to always have access to the children's state.
+
+- The state is scattered across the app, no way to retrieve the totallity of it, if you want, for example, to persist it.
+
+"But I don't want to write state-handling functions by myself"
+---
+
+In vanilla-js, the state is handled by passing some simple even-handling functions from parent component to the children, this means that you have to write the 'setState' implementation of your children every time. So what? It is just a one-liner and it can save you a ton of trouble.
+
+In this repo
+===
+
+- A reference implementation of aproof-of-concept functional component-based framework, (vanilla-fp.js) 
 - A few custom components (user-edit.js, volume-control.js)
 - A demo app that utilizes them (app.js)
