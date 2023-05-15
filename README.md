@@ -1,11 +1,9 @@
-The no-framework framework - for building component-based purely-functional UIs.
+The no-framework framework for building component-based purely-functional UIs.
 
 About vanilla-fp 
 ===
 
-At the heart of vanilla-fp is not code but convention for how to build a component. A component is a pure-ish function. It typically receives these two parameters (typically called 'state' and 'setState', but can vary across components) which provide the component with a state and with a function for altering its state.
-
-The component function returns a *UI component*, using the building blocks provided by the framework:
+At the heart of vanilla-fp is not code but convention for how to build a component. A component is a pure-ish function that typically receives two parameters (called 'state' and 'setState', but can vary across components) which provide the component with a state and with a function for altering its state and returns a *UI component*, using the building blocks provided by the framework:
 
 ```
 import {div, button, span} from './vanilla-fp.js'
@@ -17,7 +15,7 @@ export const VolumeControl = ({volume = 0, setVolume}) =>
   ])  
 ```
 
-Each vanilla-fp , a component is in charge of keeping the states of its children, instead of utilizing some external global functions and frameworks. It does so by providing implementations of the 'setState' function that saves the child state in the component's own state.
+Each vanilla-fp , a component is in charge of keeping the states of its children, instead of utilizing some external global functions and frameworks. It does so by calling it's own 'setState' function and saving the child state in the component's own state.
 
 ```
 import {VolumeControl} from './volume-control.js'
@@ -34,7 +32,7 @@ export const UserEdit = ({userInfo, setUserInfo}) =>
 ```
 
 Why?
----
+===
 
 Using component-based design allows you to organize your stuff better by promoting hierarchy in your code . However, it is rarely utilized to the fullest, because of the lack of a standard way of *managing state* when developing components (in most cases you have to have a global variable in your program, but we have to at least make sure it is *just one* global variable.
 
@@ -55,11 +53,11 @@ Why not React `useState`
 "But I don't want to write state-handling functions by myself"
 ---
 
-In vanilla-js, the state is handled by passing some simple even-handling functions from parent component to the children, this means that you have to write the 'setState' implementation of your children every time. So what? It is just a one-liner and it can save you a ton of trouble.
+In vanilla-js, the state is handled by passing some simple even-handling functions from the parent component to the children, which means that you have to write the 'setState' implementation of your children every time. So what? It is just a one-liner and it can save you a ton of trouble.
 
 In this repo
 ===
 
-- A reference implementation of aproof-of-concept functional component-based framework, (vanilla-fp.js) 
-- A few custom components (user-edit.js, volume-control.js)
-- A demo app that utilizes them (app.js)
+- `vanilla-fp.js`- a reference implementation of aproof-of-concept functional component-based framework, 
+- `user-edit.js`, `volume-control.js` - example components 
+- `app.js` - a demo app that utilizes them 
