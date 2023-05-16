@@ -53,11 +53,11 @@ Why not React `useState`
 "But I don't want to write state-handling functions by myself"
 ---
 
-In vanilla-js, the state is handled by passing some simple even-handling functions from the parent component to the children, which means that you have to write the 'setState' implementation of your children every time. So what? It is just a one-liner and it can save you a ton of trouble.
+In vanilla-js, the state is handled by passing some simple event-handling functions from the parent component to the children, which means that you have to write the 'setState' implementation of your children every time. So what? It is just a one-liner and it can save you a ton of trouble.
 
 In this repo
 ===
 
-- `vanilla-fp.js`- a reference implementation of aproof-of-concept functional component-based framework, 
+- `vanilla-fp.js`- a reference implementation of a proof-of-concept functional component-based framework, 
 - `user-edit.js`, `volume-control.js` - example components 
 - `app.js` - a demo app that utilizes them 
