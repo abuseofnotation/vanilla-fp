@@ -30,6 +30,19 @@ export const UserEdit = ({userInfo, setUserInfo}) =>
     })
   ])
 ```
+But what's at the root of the tree? There can be many options. The reference implementation, which just replaces the DOM elements actually works rather well.
+```
+export const renderComponent = (component, state = {}, params) => {
+  console.log('Rendering app with state', state)
+  document.getElementById("vanilla-fp")
+    .replaceChildren(component({
+      state, 
+      setState: (state) => renderComponent(component, state, params),
+      fetch,
+      ...params
+    }))
+}
+```
 
 Why?
 ===
@@ -50,11 +63,16 @@ Redux is great, but *it only handles state*, so a component would have to come i
 
 - The state is scattered across the app, no way to retrieve the totallity of it, if you want, for example, to persist it.
 
-"But I don't want to write state-handling functions by myself."
+"But I don't want to write state-handling functions by myself"
 ---
 
 In vanilla-js, the state is handled by passing some simple event-handling functions from the parent component to the children, which means that you have to write the 'setState' implementation of your children every time. So what? It is just a one-liner and it can save you a 
 ton of trouble.
+
+
+"But React is faster!"
+---
+React contains some optimizations which make *reloading* the DOM faster. However the speed increase would only be visible in very *complex*(complicated) apps that also *reload all the time* (e.g. if you have a huge grid with stock prices or something). Also, the *initial loading times* of React is MUCH slower, due to the much bigger size so in most cases the investment is not worth it. e.g. your app would be 10ms faster, but you'd take a second to load.
 
 "Cool, but no way that this will actually work!"
 ---
