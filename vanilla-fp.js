@@ -1,19 +1,32 @@
   // A helper for creating html elements functionally
-const createElement = (type) => ({style, className, text, onClick}, children) => {
-  const div = document.createElement(type)
-  div.classList.add(className);
-  let textNode = document.createTextNode(text);
-  div.appendChild(textNode);
-  if (children) {
-    div.replaceChildren(...children)
+export const createElement =
+  (type) =>
+  ({ className, text, onClick, disabled, ...props }, children) => {
+    //For HTML
+    const div = document.createElement(type);
+    // For SVG
+    //const el = document.createElementNS("http://www.w3.org/2000/svg", type)
+    if (className) {
+      div.classList.add(className);
+    }
+    if (text) {
+      let textNode = document.createTextNode(text);
+      el.appendChild(textNode);
+    }
+    if (children) {
+      el.replaceChildren(...children.filter((c) => c !== undefined));
+    }
+    if (onClick) {
+      el.addEventListener("click", onClick);
+    }
+    if (disabled) {
+      el.setAttribute("disabled", true);
+    }
+    Object.keys(props).forEach((propName) => {
+      el.setAttribute(propName, props[propName]);
+    });
+    return el;
   }
-  if (onClick) {
-    div.addEventListener('click', onClick)
-  }
-  div.style = style
-  return div
-}
-
   // Functions for creating html elements
   // (Right now they create DOM elements directly, but they 
   // can be made to work with with some virtual DOM lib
